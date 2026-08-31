@@ -39,7 +39,82 @@
 | 部门负责人 | 本部门事实、AI 应用机会、带回管理层确认的建议 |
 | 顾问 / 服务商 | 标明信息来源的客户复盘稿与访谈 / 会议设计 |
 
-## 安装
+## 安装运行环境与本 Skill
+
+先选择一个 Agent 运行环境安装，再按对应方式安装本 Skill。三者都可运行同一套 `SKILL.md` 与 `references/` 目录；不需要重复维护不同版本。
+
+### DeepSeek Harness（开发者预览）
+
+DeepSeek Harness 需要先安装 Node.js；它目前仍处于开发者预览。官方快速启动命令：
+
+```bash
+npx @deepseek-ai/dsh web
+```
+
+另开一个终端，将本 Skill 放入 DeepSeek Harness 的用户级技能目录：
+
+```bash
+git clone https://github.com/LucasCyberLab/enterprise-ai-self-check.git
+mkdir -p ~/.dsh/skills
+cp -R enterprise-ai-self-check ~/.dsh/skills/
+```
+
+重新打开 Web 会话后，输入：
+
+```text
+请用 enterprise-ai-self-check，带我们做一次企业 AI 落地复盘，并选择一个试点流程。
+```
+
+DeepSeek Harness 也会扫描项目级 `.dsh/skills/` 和共享 `.agents/skills/`。其本地目录监视默认开启，新增或更新 Skill 后通常无需重装运行环境。参见 [DeepSeek Harness 快速开始](https://www.deepseek.com/harness/en/) 与 [Skills 子系统说明](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md)。
+
+### OpenClaw
+
+官方安装器会处理运行时与首次引导：
+
+```bash
+# macOS / Linux
+curl -fsSL https://openclaw.ai/install.sh | bash
+
+# Windows PowerShell
+iwr -useb https://openclaw.ai/install.ps1 | iex
+```
+
+安装后，从 GitHub 为所有本地 Agent 安装本 Skill，并检查是否成功发现：
+
+```bash
+openclaw skills install git:LucasCyberLab/enterprise-ai-self-check@master --global
+openclaw skills list
+```
+
+如只想安装到当前工作区，去掉 `--global` 即可。OpenClaw 的首次引导会要求配置可用的模型认证。参见 [OpenClaw 官方安装文档](https://docs.openclaw.ai/install) 与 [Skills 文档](https://docs.openclaw.ai/skills)。
+
+### Hermes Agent
+
+官方 CLI 安装方式：
+
+```bash
+# macOS / Linux / WSL2
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+source ~/.zshrc  # Bash 用户改为 source ~/.bashrc
+
+# Windows PowerShell
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+```
+
+然后将整个 Skill 目录复制到 Hermes 的用户级目录：
+
+```bash
+git clone https://github.com/LucasCyberLab/enterprise-ai-self-check.git
+mkdir -p ~/.hermes/skills
+cp -R enterprise-ai-self-check ~/.hermes/skills/
+hermes skills list
+```
+
+新开一个 Hermes 会话后，可输入 `/enterprise-ai-self-check`，或用自然语言要求它使用该 Skill。参见 [Hermes 官方快速开始](https://hermes-agent.nousresearch.com/docs/getting-started/quickstart/) 与 [Skills 使用文档](https://hermes-agent.nousresearch.com/docs/guides/work-with-skills)。
+
+### Cursor、Claude Code、Codex
+
+如果已使用下列 Agent，只需安装本 Skill：
 
 ### Cursor
 
@@ -58,6 +133,8 @@ cp -r enterprise-ai-self-check ~/.claude/skills/enterprise-ai-self-check
 ### Codex / 其他
 
 将本仓库中的 `SKILL.md` 及 `references/`、`examples/` 目录复制到 Agent skills 目录即可。
+
+> **企业数据提醒**：本 Skill 会讨论客户、财务、服务和经营信息。实际试点前，请先确认数据授权、脱敏方式、模型服务的企业安全设置，以及哪些内容必须由人工审核；不要把未授权的客户敏感数据直接粘贴到公共账号或未获批准的工具中。
 
 ## 使用
 
